@@ -31,4 +31,14 @@ public class MainController {
     public Collection<Issue> getIssues(@RequestParam("category") String category) {
         return issueRepository.findByCategory(category);
     }
+
+    @GetMapping("issue/district")
+    public Collection<String> getDistricts() {
+        return issueRepository.findAllDistricts();
+    }
+
+    @GetMapping("issue/category")
+    public Collection<String> getCategories() {
+        return issueRepository.findAllCategories();
+    }
 }
