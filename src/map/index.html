@@ -1,0 +1,48 @@
+<html>
+<head>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=61dd2f8b-e10c-4161-bb82-e14e70834157&lang=ru_RU" type="text/javascript"></script>
+    <script src="https://yastatic.net/s3/mapsapi-jslibs/heatmap/0.0.1/heatmap.min.js" type="text/javascript"></script>
+</head>
+<body>
+    <div id="map" style="width: 1200px; height: 800px"></div>
+    <div>
+        <input type="range" id="time" min="0" max="100" value="0" style="width: 1200px">
+    </div>
+
+    <script type="text/javascript">
+        ymaps.ready(init);
+        function init() {
+            // really dumb implementation goes below...
+            fetch('data.json').then(function(response) {
+                return response.json();
+            }).then(function(json) {
+                data = json
+                    .sort()
+                    .map(elem => ([ Number(elem.lat), Number(elem.lon) ]));
+                console.log(`Loaded ${data.length} points`);
+            });
+
+            var myMap = new ymaps.Map("map", {
+                center: [59.8477173, 30.027993],
+                zoom: 7
+            });
+
+            ymaps.modules.require(['Heatmap'], function (Heatmap) {
+                heatmap = new Heatmap([]);
+                heatmap.setMap(myMap);
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+        document.getElementById("time").onchange = function(e) {
+            const { value } = e.target;
+            const step = data.length / 100;
+            const rangedData = data.slice(0, value * step);
+
+            heatmap.setData(rangedData);
+            console.log(`Displayed ${rangedData.length} points`);
+        };
+    </script>
+</body>
+</html>
