@@ -9,7 +9,6 @@
   <script src='https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster-src.js'></script>  
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   
-  <script src="js/points_provider.js"></script>
   <script src="http://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
   
   
@@ -27,6 +26,8 @@
 <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
 
 <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js" integrity="sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP" crossorigin="anonymous"></script>
+<script src="http://makinacorpus.github.io/Leaflet.Spin/spin/dist/spin.min.js" charset="utf-8"></script>
+<script src="http://makinacorpus.github.io/Leaflet.Spin/leaflet.spin.min.js" charset="utf-8"></script>
 
 <link rel="stylesheet" href="css/custom.css">
 </head>
@@ -91,17 +92,23 @@
 
 <script src="js/leaflet_conf.js"></script>
 
-
     <!-- Initialize the plugin: -->
     <script type="text/javascript">
         $(document).ready(function() {
             $('#example-multiple-selected').multiselect();
-        });
-		        $(document).ready(function() {
-            $('#example-multiple-selected-2').multiselect();
-        });
-		        $(document).ready(function() {
             $('#example-multiple-selected-3').multiselect();
+            var category = $('#example-multiple-selected').val();
+            map.spin(true);
+            $.ajax({
+                url: "/api/issue/dateRange?category=%D0%94%D0%BE%D0%BC&dateFrom=2018-01-01&dateTo=2018-12-31",
+                success: function(data) {
+                    map.spin(false);
+                    addMcgLayer(data);
+                },
+                error: function() {
+                    map.spin(false);
+                }
+            });
         });
 		
 $(function() {
@@ -111,15 +118,19 @@ $(function() {
         var dateFrom = start.format('YYYY-MM-DD');
         var dateTo = end.format('YYYY-MM-DD');
         console.log("A new date selection was made: " + dateFrom + ' to ' + dateTo);
-        $.get("/api/issue/dateRange?category=%D0%94%D0%BE%D0%BC&dateFrom=" + dateFrom + "&dateTo=" + dateTo,
-            function (data) {
-                addMcgLayer(data);
-            }
-        )
-    });
+          map.spin(true);
+          $.ajax({
+              url: "/api/issue/dateRange?category=%D0%94%D0%BE%D0%BC&dateFrom=" +dateFrom + "&dateTo=" + dateTo,
+              success: function(data) {
+                  map.spin(false);
+                  addMcgLayer(data);
+              },
+              error: function() {
+                  map.spin(false);
+              }
+          });
+  });
 });
-
-
 
     </script>
 
