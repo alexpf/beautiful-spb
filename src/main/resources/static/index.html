@@ -41,7 +41,7 @@
         <option value="id6">Водный объект</option>
         <option value="id7">Временное сооружение</option>
         <option value="id2">Двор</option>
-        <option value="id1">Дом</option>
+        <option value="id1" selected>Дом</option>
         <option value="id5">Квартира</option>
 		<option value="id8">Коммерческое строительство</option>
         <option value="id9">Мост</option>
@@ -62,7 +62,7 @@
 	  <div class="btngrp" style="z-index: 1002; left: 8%; top: 10px">
 
 	    <select id="example-multiple-selected-3" multiple="multiple">
-          <option value="cheese">Адмиралтейский</option>
+          <option value="cheese" selected>Адмиралтейский</option>
           <option value="tomatoes">Центральный</option>
           <option value="mozarella">Колпинский</option>
           <option value="mushrooms">Кировский</option>
@@ -103,7 +103,8 @@
                 url: "/api/issue/dateRange?category=%D0%94%D0%BE%D0%BC&dateFrom=2018-01-01&dateTo=2018-12-31",
                 success: function(data) {
                     map.spin(false);
-                    addMcgLayer(data);
+                    refreshLayerData(data);
+                    addMcgLayer();
                 },
                 error: function() {
                     map.spin(false);
@@ -122,8 +123,15 @@ $(function() {
           $.ajax({
               url: "/api/issue/dateRange?category=%D0%94%D0%BE%D0%BC&dateFrom=" +dateFrom + "&dateTo=" + dateTo,
               success: function(data) {
+                  removeLayers();
+                  refreshLayerData(data);
                   map.spin(false);
-                  addMcgLayer(data);
+                  if (currentLayer === 'mcg') {
+                      addMcgLayer();
+                  }
+                  else {
+                      addHeatLayer();
+                  }
               },
               error: function() {
                   map.spin(false);
@@ -133,6 +141,4 @@ $(function() {
 });
 
     </script>
-
-
 </html>

@@ -12,13 +12,18 @@ var map = L.map('map', {
 var heat;
 var mcg;
 
+var currentLayer = "mcg";
+
 L.control.zoom({
      position:'bottomright'
 }).addTo(map);
 
-function addMcgLayer(data) {
+function removeLayers() {
     if (typeof mcg !== 'undefined') map.removeLayer(mcg);
     if (typeof heat !== 'undefined') map.removeLayer(heat);
+}
+
+function refreshLayerData(data) {
 
     mcg = L.markerClusterGroup({
         chunkedLoading: true,
@@ -31,18 +36,21 @@ function addMcgLayer(data) {
         marker.bindPopup(item.name);
         mcg.addLayer(marker);
     });
-    map.addLayer(mcg);
-}
-
-function addHeatLayer(data) {
-    if (typeof mcg !== 'undefined') map.removeLayer(mcg);
-    if (typeof heat !== 'undefined') map.removeLayer(heat);
 
     var heatLayerPoints = data.map(function(item) {
-        return [item.latitude, item.longitude, 1];
+        return [item.latitude, item.longitude, 2];
     });
-    heat = L.heatLayer(heatLayerPoints, {radius: 15, blur : 1, gradient: {0.4: 'blue', 0.65: 'lime', 1: 'red'}})
+    heat = L.heatLayer(heatLayerPoints)
+}
+
+function addMcgLayer() {
+    map.addLayer(mcg);
+    currentLayer = "mcg";
+}
+
+function addHeatLayer() {
     map.addLayer(heat);
+    currentLayer = "heat";
 }
 
 var stateChangingButton = L.easyButton({
@@ -52,9 +60,8 @@ var stateChangingButton = L.easyButton({
             icon:      'fa-fire',
             title:     'Change to heatmap',
             onClick: function(btn, map) {
-				map.removeLayer(mcg);
-				map.addLayer(heat);
-                //map.setView([42.3748204,-71.1161913],16);
+                removeLayers();
+                addHeatLayer();
                 btn.state('Heatmap');
             }
     },{
@@ -62,9 +69,8 @@ var stateChangingButton = L.easyButton({
             icon:      'fa-star',               // and define its properties
             title:     'Change to cluster',      // like its title
             onClick: function(btn, map) {       // and its callback
-				map.removeLayer(heat);
-				map.addLayer(mcg);
-                //map.setView([46.25,-121.8],10);
+                removeLayers();
+                addMcgLayer();
                 btn.state('Cluster');    // change state on click!
             }
         }]
