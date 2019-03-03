@@ -12,7 +12,7 @@ var map = L.map('map', {
 var heat;
 var mcg;
 
-var periods;
+var periods = ["2018-01-01","2018-01-07", "2018-01-13", "2018-01-19", "2018-01-25"];
 
 var currentLayer = "mcg";
 
@@ -79,8 +79,3 @@ var stateChangingButton = L.easyButton({
 });
 
 stateChangingButton.addTo( map );
-
-$("#time").on('change', function(data){
-	console.log(data);
-	alert(periods[data.value.newValue])
-});

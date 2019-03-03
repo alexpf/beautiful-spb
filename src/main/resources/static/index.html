@@ -105,7 +105,7 @@
         $(document).ready(function() {
             $('#category-picker').multiselect();
             $('#district-picker').multiselect();
-            var category = $('#category-picker option:selected').text();
+        var category = $('#category-picker option:selected').text();
             map.spin(true);
             $.ajax({
                 url: "/api/issue/dateRange?category=" + category + "&dateFrom=2018-01-01&dateTo=2018-02-03",
@@ -122,7 +122,24 @@
 
 $("#time").on('change', function(data){
 			console.log(data);
-			alert(periods[data.value.newValue])
+			$('#category-picker').multiselect();
+            $('#district-picker').multiselect();
+            var category = $('#category-picker option:selected').text();
+			var dateFrom = periods[data.value.newValue];
+	        var dateTo = $('input[name="daterange"]').data('daterangepicker').endDate.format('YYYY-MM-DD');
+
+            map.spin(true);
+            $.ajax({
+                url: "/api/issue/dateRange?category=" + category + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo,
+                success: function(data) {
+                    map.spin(false);
+                    refreshLayerData(data);
+                    addMcgLayer();
+                },
+                error: function() {
+                    map.spin(false);
+                }
+            });
 		});
 
 $(function() {
@@ -131,10 +148,12 @@ $(function() {
   }, function(start, end, label) {
         var dateFrom = start.format('YYYY-MM-DD');
         var dateTo = end.format('YYYY-MM-DD');
-		var difference = end.diff(start);
+		var difference = end.diff(start) / 5;
+		var date = start;
 		periods = [];
 		for(i = 0; i < 5; i++) {
-		  periods.push(start.add(difference / 5 * i))
+		  periods.push(date.format('YYYY-MM-DD'))
+		  date = date.add(difference * i)
 		}
         console.log("A new date selection was made: " + dateFrom + ' to ' + dateTo);
         var category = $('#category-picker option:selected').text();
