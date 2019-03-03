@@ -1,10 +1,134 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Beautiful SPb</title>
+  <meta charset="UTF-8"> 
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" integrity="sha512-07I2e+7D8p6he1SIM+1twR5TIrhUQn9+I6yjqD53JQjFiMf8EtC93ty0/5vJTZGF8aAocvHYNEDJajGdNx1IsQ==" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet-src.js" integrity="sha512-WXoSHqw/t26DszhdMhOXOkI7qCiv5QWXhH9R7CgvgZMHz1ImlkVQ3uNsiQKu5wwbbxtPzFXd1hK4tzno2VqhpA==" crossorigin=""></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.0.3/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="https://rawgit.com/Leaflet/Leaflet.markercluster/leaflet-0.7/dist/MarkerCluster.Default.css">
+  <script src="https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster.js"></script>
+  <script src='https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster-src.js'></script>  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  
+  <script src="js/points_provider.js"></script>
+  <script src="http://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
+  
+  
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="js/bootstrap-multiselect.js"></script>
+<link rel="stylesheet" href="css/bootstrap-multiselect.css" type="text/css"/>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
+<script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
+
+<script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js" integrity="sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="css/custom.css">
 </head>
 <body>
-    Placeholder UI page for the Beautiful SPb prototype
-</body>
+  <div id="map">
+  <div style="z-index:1001; background: #2e76b0; width: 100%; height: 60px; position: absolute; opacity:0.7">
+  </div>
+    <div class="btngrp" style="z-index: 1002; left: 4%; top: 10px"> 
+      <select id="example-multiple-selected" multiple="multiple">
+        <option value="id10">Бюджетное учреждение</option>
+        <option value="id6">Водный объект</option>
+        <option value="id7">Временное сооружение</option>
+        <option value="id2">Двор</option>
+        <option value="id1">Дом</option>
+        <option value="id5">Квартира</option>
+		<option value="id8">Коммерческое строительство</option>
+        <option value="id9">Мост</option>
+		<option value="id10">Общественный транспорт</option>
+		<option value="id16">Объекты дял размещения информации</option>
+		<option value="id11">Остановка общественного транспорта</option>
+		<option value="id4">Парк, сад, бульвар, сквер</option>
+        <option value="id20">Рекламные или информационные конструкции</option>
+        <option value="id12">Рекламные конструкции</option>
+        <option value="id19">Сооружение</option>
+		<option value="id13">Строительная площадка</option>
+		<option value="id14">Территория Санкт-Петербурга</option>
+		<option value="id15">Торговый объект</option>
+		<option value="id3">Улица</option>
+      </select>
+	  </div>
+	  <div class="btngrp" style="z-index: 1002; left: 6%; top: 10px">
+	  <select id="example-multiple-selected-2" multiple="multiple">
+        <option value="cheese">Завершено: Автоматически</option>
+        <option value="tomatoes">Завершено: Пользователь удовлетворен решением проблемы</option>
+        <option value="mozarella">Private</option>
+        <option value="mushrooms">Промежуточный ответ</option>
+		<option value="mushrooms">Получен ответ</option>
+		<option value="accepted">Принят</option>
+		<option value="pepperoni">Рассмотрение</option>
+        <option value="pepperoni">Модерация</option>
+        <option value="pepperoni">Завершено: Народный контролер подтвердил решение проблемы</option>
+        <option value="pepperoni">Broken</option>
+        <option value="onions">N/A</option>
+      </select>
+	  </div>
+	  <div class="btngrp" style="z-index: 1002; left: 8%; top: 10px">
+
+	    <select id="example-multiple-selected-3" multiple="multiple">
+          <option value="cheese">Адмиралтейский</option>
+          <option value="tomatoes">Центральный</option>
+          <option value="mozarella">Колпинский</option>
+          <option value="mushrooms">Кировский</option>
+          <option value="pepperoni">Петроградский</option>
+          <option value="onions">Невский</option>
+          <option value="onions">Калининский</option>
+          <option value="onions">Выборгский</option>
+		  <option value="onions">Московский</option>
+          <option value="onions">Приморский</option>
+          <option value="onions">Василеостровский</option>
+          <option value="onions">Красносельский</option>
+          <option value="onions">Петродворцовый</option>
+          <option value="onions">Пушкинский</option>
+          <option value="onions">Красногвардейский</option>
+        </select>
+      </div>
+	  <div class="btngrp" style="z-index: 1002; left: 10%; top: 10px">
+	    <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" class="btn" style="width: 250"/>
+	  </div>
+	  
+	<div class="btngrp" style="z-index: 1002; left: 10%; top: 10px" id="timediv">
+      <input type="range" id="time" min="0" max="100" value="0"   class="btn">
+    </div>
+  </div>
+  </body>
+
+
+<script src="js/leaflet_conf.js"></script>
+
+
+    <!-- Initialize the plugin: -->
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#example-multiple-selected').multiselect();
+        });
+		        $(document).ready(function() {
+            $('#example-multiple-selected-2').multiselect();
+        });
+		        $(document).ready(function() {
+            $('#example-multiple-selected-3').multiselect();
+        });
+		
+$(function() {
+  $('input[name="daterange"]').daterangepicker({
+    opens: 'left'
+  }, function(start, end, label) {
+    console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+  });
+});
+
+
+
+    </script>
+
+
 </html>
