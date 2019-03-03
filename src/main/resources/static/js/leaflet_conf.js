@@ -27,6 +27,35 @@ for (var i = 0; i < addressPoints.length; i++) {
   mcg.addLayer(marker);
 }
 
+function addMcgLayer(data) {
+    map.removeLayer(heat);
+    map.removeLayer(mcg);
+
+    mcg = L.markerClusterGroup({
+        chunkedLoading: true,
+        //singleMarkerMode: true,
+        spiderfyOnMaxZoom: false
+    });
+
+    data.forEach(function(item) {
+        var marker = L.marker(new L.LatLng(item.latitude, item.longitude), {title: item.name});
+        marker.bindPopup(item.name);
+        mcg.addLayer(marker);
+    });
+    map.addLayer(mcg);
+}
+
+function addHeatLayer(data) {
+    map.removeLayer(mcg);
+    map.removeLayer(heat);
+
+    var heatLayerPoints = data.map(function(item) {
+        return [item.latitude, item.longitude, 1];
+    });
+    heat = L.heatLayer(heatLayerPoints, {radius: 15, blur : 1, gradient: {0.4: 'blue', 0.65: 'lime', 1: 'red'}})
+    map.addLayer(heat);
+}
+
 /*
 
 for (var i = 0; i < addressPoints.length; i++) {
