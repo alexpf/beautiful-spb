@@ -10,10 +10,10 @@ public interface IssueRepository extends CrudRepository<Issue, Integer> {
 
     Collection<Issue> findByCategory(String category);
 
-    @Query("select distinct i.district from issues i")
+    @Query("select distinct i.district from issue i")
     Collection<String> findAllDistricts();
 
-    @Query("select distinct i.category from issues i")
+    @Query("select distinct i.category from issue i")
     Collection<String> findAllCategories();
 
 

@@ -3,12 +3,10 @@ package ru.amc.makeathon.beautifulspb.database.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
-@Entity(name = "issues")
 @Getter
 @Setter
 public class Issue {
@@ -19,7 +17,6 @@ public class Issue {
     @NotNull
     private String category;
 
-    @Column(name = "sub_category")
     private String subCategory;
 
     @NotNull
@@ -34,8 +31,11 @@ public class Issue {
 
     private double longitude;
 
-    @Column(name = "raised_date")
     private String raisedDate;
 
+    private String lastUpdatedDate;
+
     private String status;
+
+    private Integer statusId;
 }
