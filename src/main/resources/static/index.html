@@ -9,7 +9,7 @@
   <script src='https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster-src.js'></script>  
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   
-  <script src="http://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
+  <script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
   
   
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
@@ -26,8 +26,8 @@
 <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
 
 <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js" integrity="sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP" crossorigin="anonymous"></script>
-<script src="http://makinacorpus.github.io/Leaflet.Spin/spin/dist/spin.min.js" charset="utf-8"></script>
-<script src="http://makinacorpus.github.io/Leaflet.Spin/leaflet.spin.min.js" charset="utf-8"></script>
+<script src="https://makinacorpus.github.io/Leaflet.Spin/spin/dist/spin.min.js" charset="utf-8"></script>
+<script src="https://makinacorpus.github.io/Leaflet.Spin/leaflet.spin.min.js" charset="utf-8"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.1/bootstrap-slider.min.js" charset="utf-8"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.1/css/bootstrap-slider.min.css">
 <link rel="stylesheet" href="css/custom.css">
@@ -37,7 +37,7 @@
   <div style="z-index:1001; background: #2e76b0; width: 100%; height: 60px; position: absolute; opacity:0.7">
   </div>
     <div class="btngrp" style="z-index: 1002; left: 4%; top: 10px"> 
-      <select id="example-multiple-selected" multiple="multiple">
+      <select id="category-picker">
         <option value="id10">Бюджетное учреждение</option>
         <option value="id6">Водный объект</option>
         <option value="id7">Временное сооружение</option>
@@ -47,7 +47,7 @@
 		<option value="id8">Коммерческое строительство</option>
         <option value="id9">Мост</option>
 		<option value="id10">Общественный транспорт</option>
-		<option value="id16">Объекты дял размещения информации</option>
+		<option value="id16">Объекты для размещения информации</option>
 		<option value="id11">Остановка общественного транспорта</option>
 		<option value="id4">Парк, сад, бульвар, сквер</option>
         <option value="id20">Рекламные или информационные конструкции</option>
@@ -62,7 +62,7 @@
 
 	  <div class="btngrp" style="z-index: 1002; left: 6%; top: 10px">
 
-	    <select id="example-multiple-selected-3" multiple="multiple">
+	    <select id="district-picker">
           <option value="cheese" selected>Адмиралтейский</option>
           <option value="tomatoes">Центральный</option>
           <option value="mozarella">Колпинский</option>
@@ -81,7 +81,7 @@
         </select>
       </div>
 	  <div class="btngrp" style="z-index: 1002; left: 8%; top: 10px">
-	    <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" class="btn" style="width: 250"/>
+	    <input type="text" name="daterange" value="01/01/2018 - 02/03/2018" class="btn" style="width: 250"/>
 	  </div>
 	  
 	<div class="btngrp" style="z-index: 1002; left: 12%; top: 10px;" id="timediv">
@@ -103,12 +103,12 @@
     <!-- Initialize the plugin: -->
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#example-multiple-selected').multiselect();
-            $('#example-multiple-selected-3').multiselect();
-            var category = $('#example-multiple-selected').val();
+            $('#category-picker').multiselect();
+            $('#district-picker').multiselect();
+            var category = $('#category-picker option:selected').text();
             map.spin(true);
             $.ajax({
-                url: "/api/issue/dateRange?category=%D0%94%D0%BE%D0%BC&dateFrom=2018-01-01&dateTo=2018-12-31",
+                url: "/api/issue/dateRange?category=" + category + "&dateFrom=2018-01-01&dateTo=2018-02-03",
                 success: function(data) {
                     map.spin(false);
                     refreshLayerData(data);
@@ -136,11 +136,11 @@ $(function() {
 		for(i = 0; i < 5; i++) {
 		  periods.push(start.add(difference / 5 * i))
 		}
-
         console.log("A new date selection was made: " + dateFrom + ' to ' + dateTo);
+        var category = $('#category-picker option:selected').text();
           map.spin(true);
           $.ajax({
-              url: "/api/issue/dateRange?category=%D0%94%D0%BE%D0%BC&dateFrom=" +dateFrom + "&dateTo=" + dateTo,
+              url: "/api/issue/dateRange?category=" + category + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo,
               success: function(data) {
                   removeLayers();
                   refreshLayerData(data);
@@ -157,6 +157,30 @@ $(function() {
               }
           });
   });
+
+    $('#category-picker').change(function(){
+        var category = $('#category-picker option:selected').text();
+        var dateFrom = $('input[name="daterange"]').data('daterangepicker').startDate.format('YYYY-MM-DD');
+        var dateTo = $('input[name="daterange"]').data('daterangepicker').endDate.format('YYYY-MM-DD');
+        map.spin(true);
+        $.ajax({
+            url: "/api/issue/dateRange?category=" + category + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo,
+            success: function(data) {
+                removeLayers();
+                refreshLayerData(data);
+                map.spin(false);
+                if (currentLayer === 'mcg') {
+                    addMcgLayer();
+                }
+                else {
+                    addHeatLayer();
+                }
+            },
+            error: function() {
+                map.spin(false);
+            }
+        });
+    });
 });
     </script>
 </html>
