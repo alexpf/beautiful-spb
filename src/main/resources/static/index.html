@@ -131,11 +131,17 @@ $("#time").on('change', function(data){
             map.spin(true);
             $.ajax({
                 url: "/api/issue/dateRange?category=" + category + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo,
-                success: function(data) {
-                    map.spin(false);
-                    refreshLayerData(data);
+				 success: function(data) {
+                removeLayers();
+                refreshLayerData(data);
+                map.spin(false);
+                if (currentLayer === 'mcg') {
                     addMcgLayer();
-                },
+                }
+                else {
+                    addHeatLayer();
+                }
+            },
                 error: function() {
                     map.spin(false);
                 }
