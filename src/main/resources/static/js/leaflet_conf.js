@@ -12,6 +12,8 @@ var map = L.map('map', {
 var heat;
 var mcg;
 
+var periods;
+
 var currentLayer = "mcg";
 
 L.control.zoom({
@@ -78,28 +80,7 @@ var stateChangingButton = L.easyButton({
 
 stateChangingButton.addTo( map );
 
-function stopDefAction(evt) {
-    //evt.preventDefault();
-	evt.stopPropagation();
-	console.log (evt.type + " fired");
-}
-
-document.getElementById('timediv').addEventListener(
-    'click', stopDefAction, false
-);
-document.getElementById('timediv').addEventListener(
-    'mousemove', stopDefAction, false
-);
-document.getElementById('timediv').addEventListener(
-    'mousedown', stopDefAction, false
-);
-
-document.getElementById('timediv').addEventListener(
-    'drag', stopDefAction, false
-);
-document.getElementById('timediv').addEventListener(
-    'input', stopDefAction, false
-);
-document.getElementById('timediv').addEventListener(
-    'change', stopDefAction, false
-);
+$("#time").on('change', function(data){
+	console.log(data);
+	alert(periods[data.value.newValue])
+});

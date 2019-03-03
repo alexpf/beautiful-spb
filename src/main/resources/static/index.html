@@ -28,7 +28,8 @@
 <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js" integrity="sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP" crossorigin="anonymous"></script>
 <script src="http://makinacorpus.github.io/Leaflet.Spin/spin/dist/spin.min.js" charset="utf-8"></script>
 <script src="http://makinacorpus.github.io/Leaflet.Spin/leaflet.spin.min.js" charset="utf-8"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.1/bootstrap-slider.min.js" charset="utf-8"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.1/css/bootstrap-slider.min.css">
 <link rel="stylesheet" href="css/custom.css">
 </head>
 <body>
@@ -59,7 +60,7 @@
       </select>
 	  </div>
 
-	  <div class="btngrp" style="z-index: 1002; left: 8%; top: 10px">
+	  <div class="btngrp" style="z-index: 1002; left: 6%; top: 10px">
 
 	    <select id="example-multiple-selected-3" multiple="multiple">
           <option value="cheese" selected>Адмиралтейский</option>
@@ -79,15 +80,22 @@
           <option value="onions">Красногвардейский</option>
         </select>
       </div>
-	  <div class="btngrp" style="z-index: 1002; left: 10%; top: 10px">
+	  <div class="btngrp" style="z-index: 1002; left: 8%; top: 10px">
 	    <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" class="btn" style="width: 250"/>
 	  </div>
 	  
-	<div class="btngrp" style="z-index: 1002; left: 10%; top: 10px" id="timediv">
-      <input type="range" id="time" min="0" max="100" value="0"   class="btn">
+	<div class="btngrp" style="z-index: 1002; left: 12%; top: 10px;" id="timediv">
+       <input id="time" type="text"
+          data-provide="slider"
+          data-slider-ticks="[0,1,2,3,4]"
+          data-slider-min="1"
+          data-slider-max="6"
+          data-slider-step="1"
+          data-slider-value="0"
+          data-slider-tooltip="hide" style=" width: 600px" /> 
     </div>
   </div>
-  </body>
+ </body>
 
 
 <script src="js/leaflet_conf.js"></script>
@@ -111,13 +119,24 @@
                 }
             });
         });
-		
+
+$("#time").on('change', function(data){
+			console.log(data);
+			alert(periods[data.value.newValue])
+		});
+
 $(function() {
   $('input[name="daterange"]').daterangepicker({
     opens: 'left'
   }, function(start, end, label) {
         var dateFrom = start.format('YYYY-MM-DD');
         var dateTo = end.format('YYYY-MM-DD');
+		var difference = end.diff(start);
+		periods = [];
+		for(i = 0; i < 5; i++) {
+		  periods.push(start.add(difference / 5 * i))
+		}
+
         console.log("A new date selection was made: " + dateFrom + ' to ' + dateTo);
           map.spin(true);
           $.ajax({
@@ -139,6 +158,5 @@ $(function() {
           });
   });
 });
-
     </script>
 </html>
