@@ -32,6 +32,13 @@ public class MainController {
         return issueRepository.findByCategory(category);
     }
 
+    @GetMapping("issue/dateRange")
+    public Collection<Issue> getIssues(@RequestParam("category") String category,
+                                       @RequestParam("dateFrom") String dateFrom,
+                                       @RequestParam("dateTo") String dateTo) {
+        return issueRepository.getByDateRange(category, dateFrom, dateTo);
+    }
+
     @GetMapping("issue/district")
     public Collection<String> getDistricts() {
         return issueRepository.findAllDistricts();
