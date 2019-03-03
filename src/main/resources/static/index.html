@@ -46,7 +46,7 @@
 		<option value="id8">Коммерческое строительство</option>
         <option value="id9">Мост</option>
 		<option value="id10">Общественный транспорт</option>
-		<option value="id16">Объекты дял размещения информации</option>
+		<option value="id16">Объекты для размещения информации</option>
 		<option value="id11">Остановка общественного транспорта</option>
 		<option value="id4">Парк, сад, бульвар, сквер</option>
         <option value="id20">Рекламные или информационные конструкции</option>
@@ -80,7 +80,7 @@
         </select>
       </div>
 	  <div class="btngrp" style="z-index: 1002; left: 10%; top: 10px">
-	    <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" class="btn" style="width: 250"/>
+	    <input type="text" name="daterange" value="01/01/2018 - 02/03/2018" class="btn" style="width: 250"/>
 	  </div>
 	  
 	<div class="btngrp" style="z-index: 1002; left: 10%; top: 10px" id="timediv">
@@ -100,7 +100,7 @@
             var category = $('#category-picker option:selected').text();
             map.spin(true);
             $.ajax({
-                url: "/api/issue/dateRange?category=" + category + "&dateFrom=2018-01-01&dateTo=2018-12-31",
+                url: "/api/issue/dateRange?category=" + category + "&dateFrom=2018-01-01&dateTo=2018-02-03",
                 success: function(data) {
                     map.spin(false);
                     refreshLayerData(data);
